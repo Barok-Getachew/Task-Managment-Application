@@ -21,13 +21,17 @@ class TaskController extends GetxController {
   void addTask(Task task) async {
     await StorageService.saveTask(task);
 
-    var tasks = await StorageService.getTasks();
-    var savedTask = tasks.firstWhere(
-        (t) => t.title == task.title && t.description == task.description);
+    DateTime scheduleTime = task.dueDate.subtract(const Duration(seconds: 1));
 
-    await NotificationService().showNotfication(task: savedTask);
+    if (scheduleTime.isAfter(DateTime.now())) {
+      await NotificationService().scheduleNotification(
+        id: task.id!,
+        title: 'Task Reminder',
+        body: 'Your task "${task.title}" is due soon!',
+        scheduledDate: scheduleTime,
+      );
+    }
 
-    // Refresh the task list
     fetchTasks();
   }
 

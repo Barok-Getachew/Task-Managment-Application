@@ -7,16 +7,18 @@ class TaskManegnmentApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode:
-          themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-      title: 'Task Manager',
-      locale: Get.deviceLocale,
-      initialRoute: '/splash',
-      getPages: AppRoutes.routes,
-    );
+    return Obx(() {
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode:
+            themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+        title: 'Task Manager',
+        locale: Get.deviceLocale,
+        initialRoute: '/splash',
+        getPages: AppRoutes.routes,
+      );
+    });
   }
 }

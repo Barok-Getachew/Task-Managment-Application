@@ -1,23 +1,46 @@
-import '../models/task.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 import '../utils/app_exports.dart';
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _notifications =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // Initialize the notification settings
-  static Future<void> init() async {
-    AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+  Future<void> init() async {
+    tz.initializeTimeZones();
 
-    InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidInitializationSettings,
     );
 
-    await _notifications.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notficationResponse) async {},
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+  }) async {
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your_channel_id',
+          'your_channel_name',
+        ),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
@@ -28,7 +51,7 @@ class NotificationService {
   }
 
   Future showNotfication({required Task task}) async {
-    return _notifications.show(task.id!, 'New Task Added',
+    return _flutterLocalNotificationsPlugin.show(task.id!, 'New Task Added',
         'Task Name:${task.title}', await notificationDetails());
   }
 
