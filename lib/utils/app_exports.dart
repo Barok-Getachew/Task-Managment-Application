@@ -10,3 +10,4 @@ export '../services/quote_service.dart';
 export 'package:taskmanagnent/routes/routers.dart';
 export 'package:taskmanagnent/task_manegnment_app.dart';
 export '../services/notfication_service.dart';
+export 'package:flutter_dotenv/flutter_dotenv.dart';

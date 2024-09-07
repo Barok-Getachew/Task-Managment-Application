@@ -36,7 +36,7 @@ class StorageService {
     await db.delete(
       'tasks',
       where: 'id = ?',
-      whereArgs: [id], // Match the task id
+      whereArgs: [id],
     );
   }
 }

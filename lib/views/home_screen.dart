@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanagnent/widgets/qoute_card.dart';
 import '../utils/app_exports.dart';
 
 class HomeScreen extends StatelessWidget {
-  final TaskController taskController = Get.put(TaskController());
   final ThemeController themeController = Get.put(ThemeController());
 
   HomeScreen({super.key});
@@ -11,6 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final TaskController taskController = Get.put(TaskController());
 
     return Scaffold(
       key: _scaffoldKey,
@@ -85,47 +86,7 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(
                   height: size.height * 0.07,
                 ),
-                FutureBuilder(
-                  future: QuoteService
-                      .fetchRandomQuote(), // Fetch the quote from the API
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const LinearProgressIndicator(
-                        color: Color.fromARGB(255, 15, 81, 17),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Failed to load quote'),
-                      );
-                    } else {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.02,
-                            vertical: size.height * 0.01),
-                        height: size.height * 0.21,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(size.width * 0.04)),
-                          color: const Color.fromARGB(115, 36, 52, 37),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '"${snapshot.data}"',
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 4,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontStyle: FontStyle.italic,
-                              color: Color.fromARGB(255, 255, 239, 239),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                QouteCard(size: size),
               ],
             ),
           ),
@@ -189,25 +150,24 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Obx(() => taskController.tasks.isEmpty
+            Expanded(child: Obx(() {
+              return taskController.tasks.isEmpty
                   ? const Center(
                       child: Text('No tasks available'),
                     )
-                  : Obx(
-                      () => ListView.builder(
-                        itemCount: taskController.tasks.length,
-                        itemBuilder: (context, index) {
-                          var task = taskController.tasks[index];
-                          return TaskTile(
-                            themeController: themeController,
-                            task: task,
-                            size: size,
-                          );
-                        },
-                      ),
-                    )),
-            ),
+                  : ListView.builder(
+                      itemCount: taskController.tasks.length,
+                      itemBuilder: (context, index) {
+                        var task = taskController.tasks[index];
+
+                        return TaskTile(
+                          themeController: themeController,
+                          task: task,
+                          size: size,
+                        );
+                      },
+                    );
+            })),
           ],
         ),
       ),

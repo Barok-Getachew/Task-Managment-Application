@@ -148,17 +148,6 @@ class _TaskTileState extends State<TaskTile> {
                           transition: Transition.fadeIn);
                     },
                   ),
-                  const SizedBox(width: 8),
-                  TextButton.icon(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    label: const Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    onPressed: () {
-                      _confirmDelete(context, taskController, widget.task.id);
-                    },
-                  ),
                 ],
               ),
             ],
@@ -167,22 +156,4 @@ class _TaskTileState extends State<TaskTile> {
       ),
     );
   }
-}
-
-void _confirmDelete(
-    BuildContext context, TaskController taskController, int? id) {
-  Get.defaultDialog(
-    title: 'Delete Task',
-    middleText: 'Are you sure you want to delete this task?',
-    textConfirm: 'Yes',
-    textCancel: 'No',
-    confirmTextColor: Colors.white,
-    onConfirm: () {
-      taskController.deleteTask(id!);
-      Get.back(); // Close the dialog
-    },
-    onCancel: () {
-      Get.back(); // Just close the dialog if canceled
-    },
-  );
 }

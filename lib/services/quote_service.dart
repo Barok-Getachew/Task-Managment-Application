@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../utils/app_exports.dart';
 
 class QuoteService {
-  static const String apiUrl = 'https://api.api-ninjas.com/v1/quotes';
-  static const String apiKey = 'pxVuOsAAwUkmDf94fUYJ1g==ozBAMIS8XDOWhBPi';
-
   static Future<String> fetchRandomQuote() async {
     final response = await http.get(
-      Uri.parse(apiUrl),
+      Uri.parse(dotenv.env['API_URL']!),
       headers: {
-        'X-Api-Key': apiKey,
+        'X-Api-Key': dotenv.env['API_KEY']!,
       },
     );
 

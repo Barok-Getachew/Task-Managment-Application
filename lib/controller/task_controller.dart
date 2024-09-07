@@ -14,6 +14,7 @@ class TaskController extends GetxController {
 
   void fetchTasks() async {
     var taskList = await StorageService.getTasks();
+    tasks.clear();
     tasks.assignAll(taskList);
   }
 
@@ -34,17 +35,5 @@ class TaskController extends GetxController {
     await StorageService.updateTask(task);
 
     fetchTasks();
-  }
-
-  void markAsCompleted(int id) async {
-    var task = tasks.firstWhere((t) => t.id == id);
-    task.isCompleted = true;
-    await StorageService.updateTask(task);
-    fetchTasks();
-  }
-
-  void deleteTask(int? id) async {
-    await StorageService.deleteTask(id!);
-    tasks.removeWhere((task) => task.id == id);
   }
 }
